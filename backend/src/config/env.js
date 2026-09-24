@@ -10,6 +10,7 @@ const env = {
   JWT_SECRET: process.env.JWT_SECRET || 'super_secret_shopsphere_jwt_key_2026_production_grade',
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
+  CORS_ORIGINS: process.env.CORS_ORIGINS || '',
   AI_PROVIDER: process.env.AI_PROVIDER || 'mock',
   AI_API_KEY: process.env.AI_API_KEY || '',
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',

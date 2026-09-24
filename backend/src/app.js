@@ -34,8 +34,12 @@ const app = express();
 app.use(helmet());
 
 // CORS configuration
+const configuredOrigins = [env.CLIENT_URL, ...env.CORS_ORIGINS.split(',')]
+  .map((value) => value.trim())
+  .filter(Boolean);
+
 const isAllowedOrigin = (origin, callback) => {
-  if (!origin || origin === env.CLIENT_URL) {
+  if (!origin || configuredOrigins.includes(origin)) {
     return callback(null, true);
   }
 
