@@ -1,0 +1,731 @@
+{
+  "info": {
+    "_postman_id": "shopsphere-multi-vendor-marketplace-api",
+    "name": "ShopSphere – Multi-Vendor Marketplace REST API",
+    "description": "Comprehensive Postman collection for ShopSphere REST API backend, including Authentication, Multi-Vendor Catalog, Orders, Split Orders, Delivery, Support, AI features, and Admin moderation.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sellerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "customerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "supportToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "deliveryToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01. Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. Authentication",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aarav Patel\",\n  \"email\": \"customer@shopsphere.com\",\n  \"password\": \"Password123!\",\n  \"phone\": \"+91 98765 00005\",\n  \"role\": \"CUSTOMER\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Register Seller",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Vikram Mehta\",\n  \"email\": \"techhub@shopsphere.com\",\n  \"password\": \"Password123!\",\n  \"phone\": \"+91 98765 00002\",\n  \"role\": \"SELLER\",\n  \"storeName\": \"TechHub Electronics\",\n  \"storeDescription\": \"Cutting edge gadgets\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@shopsphere.com\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aarav P. Updated\",\n  \"phone\": \"+91 98765 11111\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Password123!\",\n  \"newPassword\": \"NewPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Categories",
+      "item": [
+        {
+          "name": "List Categories (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"]
+            }
+          }
+        },
+        {
+          "name": "Create Category (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Audio & Headphones\",\n  \"description\": \"Headphones and audio equipment\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Products",
+      "item": [
+        {
+          "name": "List Products (Filters, Pagination, Search)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products?page=1&limit=10&search=laptop&minPrice=1000&maxPrice=80000&sort=price_asc",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "search", "value": "laptop" },
+                { "key": "minPrice", "value": "1000" },
+                { "key": "maxPrice", "value": "80000" },
+                { "key": "sort", "value": "price_asc" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Product (Seller)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{sellerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Wireless Gaming Mouse\",\n  \"description\": \"Ergonomic RGB rechargeable mouse\",\n  \"price\": 2499,\n  \"stock\": 30,\n  \"brand\": \"NovaTech\",\n  \"categoryId\": \"<CATEGORY_ID>\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            }
+          }
+        },
+        {
+          "name": "Update Product (Seller/Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{sellerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 2299,\n  \"stock\": 25\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Product (Seller/Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05. Seller Portal & Analytics",
+      "item": [
+        {
+          "name": "Get Seller Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/seller/profile", "host": ["{{baseUrl}}"], "path": ["seller", "profile"] }
+          }
+        },
+        {
+          "name": "Get Seller Inventory",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/seller/inventory", "host": ["{{baseUrl}}"], "path": ["seller", "inventory"] }
+          }
+        },
+        {
+          "name": "Get Seller Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/seller/dashboard", "host": ["{{baseUrl}}"], "path": ["seller", "dashboard"] }
+          }
+        },
+        {
+          "name": "Get Seller Analytics",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/seller/analytics", "host": ["{{baseUrl}}"], "path": ["seller", "analytics"] }
+          }
+        },
+        {
+          "name": "Get Seller Revenue",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/seller/revenue", "host": ["{{baseUrl}}"], "path": ["seller", "revenue"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06. Cart",
+      "item": [
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/cart", "host": ["{{baseUrl}}"], "path": ["cart"] }
+          }
+        },
+        {
+          "name": "Add Item To Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"<PRODUCT_ID>\",\n  \"quantity\": 2\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/cart/items", "host": ["{{baseUrl}}"], "path": ["cart", "items"] }
+          }
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"quantity\": 3\n}" },
+            "url": { "raw": "{{baseUrl}}/cart/items/:itemId", "host": ["{{baseUrl}}"], "path": ["cart", "items", ":itemId"] }
+          }
+        },
+        {
+          "name": "Remove Item From Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/cart/items/:itemId", "host": ["{{baseUrl}}"], "path": ["cart", "items", ":itemId"] }
+          }
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/cart/clear", "host": ["{{baseUrl}}"], "path": ["cart", "clear"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07. Orders & Multi-Vendor Splitting",
+      "item": [
+        {
+          "name": "Checkout Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shippingAddress\": {\n    \"street\": \"12 MG Road\",\n    \"city\": \"Bengaluru\",\n    \"state\": \"Karnataka\",\n    \"postalCode\": \"560001\",\n    \"country\": \"India\",\n    \"phone\": \"+91 98765 00005\"\n  },\n  \"couponCode\": \"WELCOME50\",\n  \"paymentMethod\": \"MOCK_GATEWAY\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] }
+          }
+        },
+        {
+          "name": "Get Orders (Role Isolated)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/orders", "host": ["{{baseUrl}}"], "path": ["orders"] }
+          }
+        },
+        {
+          "name": "Get Order By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/orders/:id", "host": ["{{baseUrl}}"], "path": ["orders", ":id"] }
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{sellerToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"CONFIRMED\"\n}" },
+            "url": { "raw": "{{baseUrl}}/orders/:id/status", "host": ["{{baseUrl}}"], "path": ["orders", ":id", "status"] }
+          }
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"reason\": \"Mistaken duplicate order\"\n}" },
+            "url": { "raw": "{{baseUrl}}/orders/:id/cancel", "host": ["{{baseUrl}}"], "path": ["orders", ":id", "cancel"] }
+          }
+        },
+        {
+          "name": "Return Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"reason\": \"Size does not fit\"\n}" },
+            "url": { "raw": "{{baseUrl}}/orders/:id/return", "host": ["{{baseUrl}}"], "path": ["orders", ":id", "return"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "08. Wishlist",
+      "item": [
+        {
+          "name": "Get Wishlist",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/wishlist", "host": ["{{baseUrl}}"], "path": ["wishlist"] }
+          }
+        },
+        {
+          "name": "Add To Wishlist",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/wishlist/:productId", "host": ["{{baseUrl}}"], "path": ["wishlist", ":productId"] }
+          }
+        },
+        {
+          "name": "Remove From Wishlist",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/wishlist/:productId", "host": ["{{baseUrl}}"], "path": ["wishlist", ":productId"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "09. Reviews",
+      "item": [
+        {
+          "name": "Submit Verified Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"<PRODUCT_ID>\",\n  \"rating\": 5,\n  \"comment\": \"Exceptional quality, super fast delivery!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/reviews", "host": ["{{baseUrl}}"], "path": ["reviews"] }
+          }
+        },
+        {
+          "name": "Get Product Reviews",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/products/:id/reviews", "host": ["{{baseUrl}}"], "path": ["products", ":id", "reviews"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Coupons",
+      "item": [
+        {
+          "name": "Validate Coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"WELCOME50\",\n  \"orderAmount\": 2500\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/coupons/validate", "host": ["{{baseUrl}}"], "path": ["coupons", "validate"] }
+          }
+        },
+        {
+          "name": "Create Coupon (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"FESTIVE15\",\n  \"discountType\": \"PERCENTAGE\",\n  \"discountValue\": 15,\n  \"minOrderAmount\": 1500,\n  \"maxDiscount\": 750,\n  \"expiryDate\": \"2026-12-31T23:59:59.000Z\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/coupons", "host": ["{{baseUrl}}"], "path": ["coupons"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Notifications",
+      "item": [
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/notifications", "host": ["{{baseUrl}}"], "path": ["notifications"] }
+          }
+        },
+        {
+          "name": "Mark All Read",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/notifications/read-all", "host": ["{{baseUrl}}"], "path": ["notifications", "read-all"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Support & Disputes",
+      "item": [
+        {
+          "name": "Create Support Ticket",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"Invoice question\",\n  \"description\": \"Need GST invoice copy for my order\",\n  \"priority\": \"LOW\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/support/tickets", "host": ["{{baseUrl}}"], "path": ["support", "tickets"] }
+          }
+        },
+        {
+          "name": "File Dispute",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"<ORDER_ID>\",\n  \"sellerId\": \"<SELLER_ID>\",\n  \"reason\": \"Wrong color shipped\",\n  \"description\": \"Received silver instead of space gray\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/disputes", "host": ["{{baseUrl}}"], "path": ["disputes"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. Delivery & Settlements",
+      "item": [
+        {
+          "name": "Get Assigned Deliveries",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{deliveryToken}}" }],
+            "url": { "raw": "{{baseUrl}}/delivery/orders", "host": ["{{baseUrl}}"], "path": ["delivery", "orders"] }
+          }
+        },
+        {
+          "name": "Get Seller Settlements",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{sellerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/settlements/seller", "host": ["{{baseUrl}}"], "path": ["settlements", "seller"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "14. AI Intelligence",
+      "item": [
+        {
+          "name": "Generate Product Description (AI)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{sellerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"AeroStream Wireless Earbuds\",\n  \"brand\": \"SonicPro\",\n  \"category\": \"Audio\",\n  \"features\": [\n    \"Active Noise Cancellation with Transparency Mode\",\n    \"48-hour ultra long battery life with charging case\",\n    \"IPX7 waterproof and sweatproof\"\n  ],\n  \"specifications\": {\n    \"Driver\": \"11mm dynamic titanium\",\n    \"Bluetooth\": \"5.4\",\n    \"Codec\": \"LDAC, AAC, SBC\"\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/ai/generate-description", "host": ["{{baseUrl}}"], "path": ["ai", "generate-description"] }
+          }
+        },
+        {
+          "name": "Semantic Product Search (AI Intent)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"I need a budget laptop for coding with good battery life\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/ai/semantic-search", "host": ["{{baseUrl}}"], "path": ["ai", "semantic-search"] }
+          }
+        },
+        {
+          "name": "Get AI Product Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/ai/recommendations", "host": ["{{baseUrl}}"], "path": ["ai", "recommendations"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "15. Admin Portal",
+      "item": [
+        {
+          "name": "Admin Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/dashboard", "host": ["{{baseUrl}}"], "path": ["admin", "dashboard"] }
+          }
+        },
+        {
+          "name": "Admin Reports",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/reports", "host": ["{{baseUrl}}"], "path": ["admin", "reports"] }
+          }
+        },
+        {
+          "name": "List Pending Sellers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/sellers?status=PENDING", "host": ["{{baseUrl}}"], "path": ["admin", "sellers"], "query": [{ "key": "status", "value": "PENDING" }] }
+          }
+        },
+        {
+          "name": "Approve / Reject Seller",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approvalStatus\": \"APPROVED\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/admin/sellers/:id/status", "host": ["{{baseUrl}}"], "path": ["admin", "sellers", ":id", "status"] }
+          }
+        },
+        {
+          "name": "Get Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/audit-logs", "host": ["{{baseUrl}}"], "path": ["admin", "audit-logs"] }
+          }
+        }
+      ]
+    }
+  ]
+}
